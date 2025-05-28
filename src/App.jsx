@@ -698,10 +698,7 @@ function PersonalDesignSection() {
       id: 4,
       title: "Pastel Symphony",
       year: "2024",
-      gallery: [
-        "/designs/Pastel_Symphony/1.JPG",
-        "/designs/Pastel_Symphony/2.jpg",
-      ],
+      gallery: ["/designs/Pastel_Symphony/official_1080.png"],
     },
   ];
 

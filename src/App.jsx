@@ -374,6 +374,13 @@ function HeroSection({ scrollToSection }) {
 function ExperienceSection() {
   const experiences = [
     {
+      title: "RMIT University",
+      period: "2024-2027",
+      description: "Bachelor of Professional Communication",
+      link: "https://www.rmit.edu.vn/",
+      details: [],
+    },
+    {
       title: "NHH Photography Club",
       period: "2021-2025",
       description: "Photographer - Mentor/ Core team member",
@@ -668,23 +675,13 @@ function PersonalDesignSection() {
       id: 1,
       title: "Food Magazine",
       year: "2024",
-      gallery: [
-        "/designs/Food_Magazine/1.JPG",
-        "/designs/Food_Magazine/2.JPG",
-        "/designs/Food_Magazine/3.JPG",
-        "/designs/Food_Magazine/4.JPG",
-        "/designs/Food_Magazine/5.JPG",
-      ],
+      gallery: ["/designs/Food_Magazine/official_1080.png"],
     },
     {
       id: 2,
       title: "LipStick's Brochure",
       year: "2024",
-      gallery: [
-        "/designs/LipStick_Brochure/1.JPG",
-        "/designs/LipStick_Brochure/2.JPG",
-        "/designs/LipStick_Brochure/3.JPEG",
-      ],
+      gallery: ["/designs/LipStick_Brochure/official_1080.png"],
     },
     {
       id: 3,
@@ -767,7 +764,7 @@ function PersonalDesignSection() {
                 exit={{ scale: 0.8, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex justify-between items-center mb-6">
+                {/* <div className="flex justify-between items-center mb-6">
                   <h3
                     style={{ fontFamily: "Dream-Avenue" }}
                     className="text-3xl font-bold text-black"
@@ -780,7 +777,7 @@ function PersonalDesignSection() {
                   >
                     <X size={24} />
                   </button>
-                </div>
+                </div> */}
 
                 <div className="grid gap-4">
                   {selectedProject.gallery.map((img, index) => (

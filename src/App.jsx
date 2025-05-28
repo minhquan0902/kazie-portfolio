@@ -374,22 +374,52 @@ function HeroSection({ scrollToSection }) {
 function ExperienceSection() {
   const experiences = [
     {
-      title: "RMIT University",
-      period: "2024 - 2027",
-      description: "Bachelor of Design (Communication Design)",
-      details: "Focusing on visual communication, branding, and digital media",
+      title: "NHH Photography Club",
+      period: "2021-2025",
+      description: "Photographer - Mentor/ Core team member",
+      link: "https://www.facebook.com/NHHPTG",
+      details: [
+        "Built and maintained detailed project plans and task lists covering ideation, budgeting, styling, props, and logistics.",
+        "Led an 8-member team to deliver the award-winning TeTrad Project; managed agenda, timeline, and budget sheets while tracking progress and driving contributions.",
+        "Demonstrated strong time-management and conflict-resolution skills.",
+        "Directed visual production for external events: Gấu Uniform Collaboration (2023), “Chơi Chất-Chất Chơi” Rock Show, “Hội Chợ Dân Gian – Nghe Hay Ha” (2024), and multiple yearbook projects.",
+        "Produced the Yearbook Album for Sugie Band.",
+        "Mentoring the next generation, planning event agendas, and scheduling team meetings.",
+      ],
     },
     {
-      title: "Creative Studio Intern",
-      period: "2025 - Present",
-      description: "Junior Graphic Designer",
-      details: "Working on brand identity projects and social media campaigns",
+      title: "InnoEx 2024",
+      period: "8/2024",
+      description: "Media Collaborator",
+      link: "https://innoex.vn/",
+      details: [
+        "Photographed every event zone.",
+        "Curated and edited images for on-time posts on the official page.",
+        "Directed visitors to exhibition areas and booths.",
+      ],
     },
     {
-      title: "Freelance Designer",
-      period: "2026 - Future",
-      description: "Independent Creative Professional",
-      details: "Specializing in brand design and digital illustrations",
+      title: "White Acoustic Band",
+      period: "2023 - 2024",
+      description: "Media",
+      link: "https://www.facebook.com/w.acoustic.nhh",
+      details: [
+        "Collaborated effectively with cross-department teams.",
+        "Developed and executed a comprehensive social-media strategy for official channels.",
+        "Led production of the Yearbook Album.",
+      ],
+    },
+    {
+      title: "HCDG Nguyen Huu Huan 2025 - Festival",
+      period: "2023 - 2024",
+      description: "External Relations",
+      link: "https://www.facebook.com/hcdg.nhh",
+      details: [
+        "Researched and secured sponsorship opportunities from food-and-beverage businesses.",
+        "Drafted and designed comprehensive event proposals.",
+        "Liaised with artists’ assistants and managed detailed performance timelines pre-event and on-event.",
+        "Coordinated with the school president to finalize key festival logistics, including artist fees, stage setup, and staffing.",
+      ],
     },
   ];
 
@@ -434,35 +464,94 @@ function ExperienceSection() {
                   index % 2 === 0 ? "md:pr-8 md:text-right" : "md:pl-8"
                 }`}
               >
-                <motion.div
-                  className="bg-white/60 backdrop-blur-sm p-6 rounded-lg border border-black/20"
-                  whileHover={{ scale: 1.05, borderColor: "#000000" }}
-                >
-                  <h3
-                    className="text-2xl font-bold text-black mb-2"
-                    style={{ fontFamily: "Dream-Avenue" }}
+                {exp.link ? (
+                  <a
+                    href={exp.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
                   >
-                    {exp.title}
-                  </h3>
-                  <p
-                    className="text-black/70 mb-2"
-                    style={{ fontFamily: "Cardo99s" }}
+                    <motion.div
+                      className="bg-white/60 backdrop-blur-sm p-6 rounded-lg border border-black/20 cursor-pointer transition-all"
+                      whileHover={{ scale: 1.05, borderColor: "#000000" }}
+                    >
+                      <h3
+                        className="text-2xl font-bold text-black mb-2"
+                        style={{ fontFamily: "Dream-Avenue" }}
+                      >
+                        {exp.title}
+                      </h3>
+                      <p
+                        className="text-black/70 mb-2"
+                        style={{ fontFamily: "Cardo99s" }}
+                      >
+                        {exp.period}
+                      </p>
+                      <p
+                        className="text-black font-semibold mb-3"
+                        style={{ fontFamily: "Cardo99s" }}
+                      >
+                        {exp.description}
+                      </p>
+                      <ul
+                        className={`space-y-2 ${
+                          index % 2 === 0 ? "md:text-left" : ""
+                        }`}
+                      >
+                        {exp.details.map((detail, detailIndex) => (
+                          <li
+                            key={detailIndex}
+                            className="text-black/70 flex items-start"
+                            style={{ fontFamily: "Cardo99s" }}
+                          >
+                            <span className="mr-2 text-black/50">•</span>
+                            <span className="flex-1">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  </a>
+                ) : (
+                  <motion.div
+                    className="bg-white/60 backdrop-blur-sm p-6 rounded-lg border border-black/20"
+                    whileHover={{ scale: 1.05, borderColor: "#000000" }}
                   >
-                    {exp.period}
-                  </p>
-                  <p
-                    className="text-black font-semibold mb-2"
-                    style={{ fontFamily: "Cardo99s" }}
-                  >
-                    {exp.description}
-                  </p>
-                  <p
-                    className="text-black/70"
-                    style={{ fontFamily: "Cardo99s" }}
-                  >
-                    {exp.details}
-                  </p>
-                </motion.div>
+                    <h3
+                      className="text-2xl font-bold text-black mb-2"
+                      style={{ fontFamily: "Dream-Avenue" }}
+                    >
+                      {exp.title}
+                    </h3>
+                    <p
+                      className="text-black/70 mb-2"
+                      style={{ fontFamily: "Cardo99s" }}
+                    >
+                      {exp.period}
+                    </p>
+                    <p
+                      className="text-black font-semibold mb-3"
+                      style={{ fontFamily: "Cardo99s" }}
+                    >
+                      {exp.description}
+                    </p>
+                    <ul
+                      className={`space-y-2 ${
+                        index % 2 === 0 ? "md:text-left" : ""
+                      }`}
+                    >
+                      {exp.details.map((detail, detailIndex) => (
+                        <li
+                          key={detailIndex}
+                          className="text-black/70 flex items-start"
+                          style={{ fontFamily: "Cardo99s" }}
+                        >
+                          <span className="mr-2 text-black/50">•</span>
+                          <span className="flex-1">{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           ))}
@@ -679,7 +768,10 @@ function PersonalDesignSection() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-3xl font-bold text-black">
+                  <h3
+                    style={{ fontFamily: "Dream-Avenue" }}
+                    className="text-3xl font-bold text-black"
+                  >
                     {selectedProject.title}
                   </h3>
                   <button

@@ -90,7 +90,7 @@ function AnimatedSphere() {
 function ScrollIndicator({ onClick }) {
   return (
     <motion.div
-      className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer"
+      className="hidden md:flex absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1, duration: 0.8 }}
@@ -221,7 +221,7 @@ function Navigation({ scrollToSection }) {
                     scrollToSection(item.toLowerCase().replace(" ", "-"))
                   }
                   className="text-black hover:opacity-70 transition-opacity duration-300"
-                  style={{ fontFamily: "Dream-Avenue" }}
+                  style={{ fontFamily: "Dream-Avenue", fontSize: "1.4rem" }}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -580,9 +580,11 @@ function PersonalDesignSection() {
       title: "Food Magazine",
       year: "2024",
       gallery: [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?w=800&h=600&fit=crop",
+        "/designs/Food_Magazine/1.JPG",
+        "/designs/Food_Magazine/2.JPG",
+        "/designs/Food_Magazine/3.JPG",
+        "/designs/Food_Magazine/4.JPG",
+        "/designs/Food_Magazine/5.JPG",
       ],
     },
     {
@@ -590,8 +592,9 @@ function PersonalDesignSection() {
       title: "LipStick's Brochure",
       year: "2024",
       gallery: [
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop",
+        "/designs/LipStick_Brochure/1.JPG",
+        "/designs/LipStick_Brochure/2.JPG",
+        "/designs/LipStick_Brochure/3.JPEG",
       ],
     },
     {
@@ -599,9 +602,10 @@ function PersonalDesignSection() {
       title: "MilkTea's Logo",
       year: "2024",
       gallery: [
-        "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&h=600&fit=crop",
+        "/designs/MilkTea_Logo/1.jpg",
+        "/designs/MilkTea_Logo/2.jpg",
+        "/designs/MilkTea_Logo/3.jpg",
+        "/designs/MilkTea_Logo/4.jpg",
       ],
     },
     {
@@ -609,8 +613,8 @@ function PersonalDesignSection() {
       title: "Pastel Symphony",
       year: "2024",
       gallery: [
-        "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=600&fit=crop",
+        "/designs/Pastel_Symphony/1.JPG",
+        "/designs/Pastel_Symphony/2.jpg",
       ],
     },
   ];
@@ -623,6 +627,7 @@ function PersonalDesignSection() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          style={{ fontFamily: "Dream-Avenue" }}
         >
           Personal Design
         </motion.h2>
@@ -640,10 +645,16 @@ function PersonalDesignSection() {
               whileTap={{ scale: 0.98 }}
               onClick={() => setSelectedProject(project)}
             >
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              <h3
+                style={{ fontFamily: "Dream-Avenue" }}
+                className="text-2xl md:text-3xl font-bold mb-4"
+              >
                 {project.title}
               </h3>
-              <p className="text-lg opacity-70 font-serif">
+              <p
+                style={{ fontFamily: "Cardo99s" }}
+                className="text-lg opacity-70 font-serif"
+              >
                 Year: {project.year}
               </p>
             </motion.div>

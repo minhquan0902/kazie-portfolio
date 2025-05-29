@@ -721,6 +721,7 @@ function GalleryGrid({ images, title }) {
 // Personal Design Section
 function PersonalDesignSection() {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [itemsPerRow, setItemsPerRow] = useState(3);
 
   const projects = [
     {
@@ -749,6 +750,95 @@ function PersonalDesignSection() {
     },
   ];
 
+  // Update items per row based on screen size
+  useEffect(() => {
+    const updateItemsPerRow = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerRow(1); // Mobile: 1 column
+      } else if (window.innerWidth < 1024) {
+        setItemsPerRow(2); // Tablet: 2 columns
+      } else {
+        setItemsPerRow(3); // Desktop: 3 columns
+      }
+    };
+
+    updateItemsPerRow();
+    window.addEventListener("resize", updateItemsPerRow);
+    return () => window.removeEventListener("resize", updateItemsPerRow);
+  }, []);
+
+  const handleCardClick = (project) => {
+    // Toggle selection - if clicking the same card, deselect it
+    setSelectedProject(selectedProject?.id === project.id ? null : project);
+  };
+
+  // Group projects into rows based on responsive items per row
+  const projectRows = [];
+  for (let i = 0; i < projects.length; i += itemsPerRow) {
+    projectRows.push(projects.slice(i, i + itemsPerRow));
+  }
+
+  // Function to render the selected project display
+  const renderProjectDisplay = (project) => (
+    <AnimatePresence mode="wait">
+      {selectedProject?.id === project.id && (
+        <motion.div
+          className="col-span-full"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+          <motion.div
+            className="relative bg-white/60 backdrop-blur-sm border-4 border-black p-4 md:p-8 rounded-lg mt-4 md:mt-8"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 30, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            {/* Close button */}
+            <motion.button
+              className="absolute top-2 right-2 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
+              onClick={() => setSelectedProject(null)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <X size={16} className="md:hidden" />
+              <X size={20} className="hidden md:block" />
+            </motion.button>
+
+            {/* Project Title */}
+            <h4
+              className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6 text-center pr-8 md:pr-0"
+              style={{ fontFamily: "Dream-Avenue" }}
+            >
+              {selectedProject.title}
+            </h4>
+
+            {/* Image Gallery */}
+            <div className="space-y-4 md:space-y-6">
+              {selectedProject.gallery.map((img, index) => (
+                <motion.img
+                  key={index}
+                  src={img}
+                  alt={`${selectedProject.title} ${index + 1}`}
+                  className="w-full rounded-lg shadow-xl"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    delay: index * 0.15,
+                    duration: 0.5,
+                    ease: "easeOut",
+                  }}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <section id="personal-design" className="py-20 bg-[#fffff7]">
       <div className="max-w-7xl mx-auto px-4">
@@ -762,69 +852,82 @@ function PersonalDesignSection() {
           Personal Design
         </motion.h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              className="border-4 border-black bg-[#fffff7] p-8 cursor-pointer hover:bg-black hover:text-white transition-colors duration-300 aspect-[4/3] flex flex-col justify-center items-center text-center"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setSelectedProject(project)}
-            >
-              <h3
-                style={{ fontFamily: "Dream-Avenue" }}
-                className="text-2xl md:text-3xl font-bold mb-4"
-              >
-                {project.title}
-              </h3>
-              <p
-                style={{ fontFamily: "Cardo99s" }}
-                className="text-lg opacity-70 font-serif"
-              >
-                Year: {project.year}
-              </p>
-            </motion.div>
+        <div className="max-w-5xl mx-auto">
+          {/* Render rows with inline displays */}
+          {projectRows.map((row, rowIndex) => (
+            <div key={rowIndex}>
+              {/* Cards Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-0">
+                {row.map((project, index) => {
+                  const globalIndex = rowIndex * itemsPerRow + index;
+                  return (
+                    <React.Fragment key={project.id}>
+                      <motion.div
+                        className={`border-4 p-6 md:p-8 cursor-pointer transition-all duration-300 aspect-[4/3] flex flex-col justify-center items-center text-center ${
+                          selectedProject?.id === project.id
+                            ? "border-black bg-black text-white shadow-2xl"
+                            : "border-black bg-[#fffff7] hover:bg-black hover:text-white"
+                        }`}
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: globalIndex * 0.1 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleCardClick(project)}
+                      >
+                        <h3
+                          style={{ fontFamily: "Dream-Avenue" }}
+                          className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-4"
+                        >
+                          {project.title}
+                        </h3>
+                        <p
+                          style={{ fontFamily: "Cardo99s" }}
+                          className="text-base md:text-lg opacity-70 font-serif"
+                        >
+                          Year: {project.year}
+                        </p>
+                      </motion.div>
+
+                      {/* On mobile, show gallery right after each card */}
+                      {itemsPerRow === 1 &&
+                        selectedProject?.id === project.id && (
+                          <div className="md:hidden">
+                            {renderProjectDisplay(project)}
+                          </div>
+                        )}
+                    </React.Fragment>
+                  );
+                })}
+
+                {/* Fill empty grid cells in the last row (desktop only) */}
+                {rowIndex === projectRows.length - 1 &&
+                  row.length < itemsPerRow &&
+                  itemsPerRow > 1 &&
+                  Array.from({ length: itemsPerRow - row.length }).map(
+                    (_, i) => (
+                      <div key={`empty-${i}`} className="hidden md:block" />
+                    )
+                  )}
+              </div>
+
+              {/* Display selected project if it's in this row (tablet and desktop) */}
+              {itemsPerRow > 1 &&
+                row.some((project) => project.id === selectedProject?.id) && (
+                  <div className="hidden md:block">
+                    {renderProjectDisplay(selectedProject)}
+                  </div>
+                )}
+
+              {/* Add margin only if not the last row or if there's a selected project display */}
+              {(rowIndex < projectRows.length - 1 ||
+                row.some((project) => project.id === selectedProject?.id)) && (
+                <div className="mb-4 md:mb-8" />
+              )}
+            </div>
           ))}
         </div>
-
-        {/* Project Gallery Modal */}
-        <AnimatePresence>
-          {selectedProject && (
-            <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg p-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedProject(null)}
-            >
-              <motion.div
-                className="bg-[#fffff7] rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="grid gap-4">
-                  {selectedProject.gallery.map((img, index) => (
-                    <motion.img
-                      key={index}
-                      src={img}
-                      alt={`${selectedProject.title} ${index + 1}`}
-                      className="w-full rounded-lg"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </section>
   );

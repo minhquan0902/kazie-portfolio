@@ -808,12 +808,12 @@ function PersonalDesignSection() {
             </motion.button>
 
             {/* Project Title */}
-            <h4
+            {/* <h4
               className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6 text-center pr-8 md:pr-0"
               style={{ fontFamily: "Dream-Avenue" }}
             >
               {selectedProject.title}
-            </h4>
+            </h4> */}
 
             {/* Image Gallery */}
             <div className="space-y-4 md:space-y-6">
@@ -1014,12 +1014,12 @@ function PhotographySection() {
             </motion.button>
 
             {/* Photo Title */}
-            <h4
+            {/* <h4
               className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6 text-center pr-8 md:pr-0"
               style={{ fontFamily: "Dream-Avenue" }}
             >
               {selectedPhoto.title}
-            </h4>
+            </h4> */}
 
             {/* Photo Gallery */}
             <div className="space-y-4 md:space-y-6">

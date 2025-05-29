@@ -935,20 +935,115 @@ function PersonalDesignSection() {
 
 // Photography Section
 function PhotographySection() {
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [photosPerRow, setPhotosPerRow] = useState(3);
+
   const photos = [
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=400&h=400&fit=crop",
+    {
+      id: 1,
+      title: "Studio",
+      year: "2024",
+      gallery: ["/designs/Studio/studio.jpg"],
+    },
+    {
+      id: 2,
+      title: "Graduation",
+      year: "2024",
+      gallery: [
+        "/designs/Graduation/graduation_1.jpg",
+        "/designs/Graduation/graduation_2.jpg",
+      ],
+    },
   ];
+
+  // Update photos per row based on screen size
+  useEffect(() => {
+    const updatePhotosPerRow = () => {
+      if (window.innerWidth < 768) {
+        setPhotosPerRow(1); // Mobile: 1 column
+      } else if (window.innerWidth < 1024) {
+        setPhotosPerRow(2); // Tablet: 2 columns
+      } else {
+        setPhotosPerRow(3); // Desktop: 3 columns
+      }
+    };
+
+    updatePhotosPerRow();
+    window.addEventListener("resize", updatePhotosPerRow);
+    return () => window.removeEventListener("resize", updatePhotosPerRow);
+  }, []);
+
+  const handlePhotoClick = (photo) => {
+    // Toggle selection - if clicking the same card, deselect it
+    setSelectedPhoto(selectedPhoto?.id === photo.id ? null : photo);
+  };
+
+  // Group photos into rows based on responsive photos per row
+  const photoRows = [];
+  for (let i = 0; i < photos.length; i += photosPerRow) {
+    photoRows.push(photos.slice(i, i + photosPerRow));
+  }
+
+  // Function to render the selected photo display
+  const renderPhotoDisplay = (photo) => (
+    <AnimatePresence mode="wait">
+      {selectedPhoto?.id === photo.id && (
+        <motion.div
+          className="col-span-full"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+          <motion.div
+            className="relative bg-white/60 backdrop-blur-sm border-4 border-black p-4 md:p-8 rounded-lg mt-4 md:mt-8"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 30, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            {/* Close button */}
+            <motion.button
+              className="absolute top-2 right-2 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
+              onClick={() => setSelectedPhoto(null)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <X size={16} className="md:hidden" />
+              <X size={20} className="hidden md:block" />
+            </motion.button>
+
+            {/* Photo Title */}
+            <h4
+              className="text-2xl md:text-3xl font-bold text-black mb-4 md:mb-6 text-center pr-8 md:pr-0"
+              style={{ fontFamily: "Dream-Avenue" }}
+            >
+              {selectedPhoto.title}
+            </h4>
+
+            {/* Photo Gallery */}
+            <div className="space-y-4 md:space-y-6">
+              {selectedPhoto.gallery.map((img, index) => (
+                <motion.img
+                  key={index}
+                  src={img}
+                  alt={`${selectedPhoto.title} ${index + 1}`}
+                  className="w-full rounded-lg shadow-xl"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    delay: index * 0.15,
+                    duration: 0.5,
+                    ease: "easeOut",
+                  }}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 
   return (
     <section id="photography" className="py-20 bg-[#fffff7]">
@@ -964,13 +1059,75 @@ function PhotographySection() {
           Photography
         </motion.h2>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <GalleryGrid images={photos} title="Photography" />
-        </motion.div>
+        <div className="max-w-5xl mx-auto">
+          {/* Render rows with inline displays */}
+          {photoRows.map((row, rowIndex) => (
+            <div key={rowIndex}>
+              {/* Cards Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-0">
+                {row.map((photo, index) => {
+                  const globalIndex = rowIndex * photosPerRow + index;
+                  return (
+                    <React.Fragment key={photo.id}>
+                      <motion.div
+                        className={`border-4 p-6 md:p-8 cursor-pointer transition-all duration-300 aspect-[4/3] flex flex-col justify-center items-center text-center ${
+                          selectedPhoto?.id === photo.id
+                            ? "border-black bg-black text-white shadow-2xl"
+                            : "border-black bg-[#fffff7] hover:bg-black hover:text-white"
+                        }`}
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: globalIndex * 0.1 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handlePhotoClick(photo)}
+                      >
+                        <h3
+                          style={{ fontFamily: "Dream-Avenue" }}
+                          className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-4"
+                        >
+                          {photo.title}
+                        </h3>
+                      </motion.div>
+
+                      {/* On mobile, show gallery right after each card */}
+                      {photosPerRow === 1 && selectedPhoto?.id === photo.id && (
+                        <div className="md:hidden">
+                          {renderPhotoDisplay(photo)}
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+
+                {/* Fill empty grid cells in the last row (desktop only) */}
+                {rowIndex === photoRows.length - 1 &&
+                  row.length < photosPerRow &&
+                  photosPerRow > 1 &&
+                  Array.from({ length: photosPerRow - row.length }).map(
+                    (_, i) => (
+                      <div key={`empty-${i}`} className="hidden md:block" />
+                    )
+                  )}
+              </div>
+
+              {/* Display selected photo if it's in this row (tablet and desktop) */}
+              {photosPerRow > 1 &&
+                row.some((photo) => photo.id === selectedPhoto?.id) && (
+                  <div className="hidden md:block">
+                    {renderPhotoDisplay(selectedPhoto)}
+                  </div>
+                )}
+
+              {/* Add margin only if not the last row or if there's a selected photo display */}
+              {(rowIndex < photoRows.length - 1 ||
+                row.some((photo) => photo.id === selectedPhoto?.id)) && (
+                <div className="mb-4 md:mb-8" />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -1080,6 +1237,12 @@ export default function App() {
     "/designs/LipStick_Brochure/official_1080.webp",
     "/designs/MilkTea_Logo/official_1080.jpg",
     "/designs/Pastel_Symphony/official_1080.webp",
+
+    // Photo images
+    "/designs/Studio/studio.jpg",
+    "/designs/Graduation/graduation_1.jpg",
+    "/designs/Graduation/graduation_2.jpg",
+
     // Hero portrait
     "/designs/IMG_4510.JPG",
   ];

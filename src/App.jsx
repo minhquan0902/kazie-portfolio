@@ -46,6 +46,58 @@ if (typeof document !== "undefined") {
   document.head.appendChild(styleElement);
 }
 
+// Custom hook for preloading images
+function useImagePreloader(imageUrls) {
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+
+  useEffect(() => {
+    let isCancelled = false;
+    const imagePromises = [];
+
+    imageUrls.forEach((url) => {
+      const promise = new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          if (!isCancelled) {
+            resolve(url);
+          }
+        };
+        img.onerror = () => {
+          console.error(`Failed to preload image: ${url}`);
+          resolve(url); // Resolve anyway to not block other images
+        };
+        img.src = url;
+      });
+      imagePromises.push(promise);
+    });
+
+    // Track loading progress
+    let loadedCount = 0;
+    imagePromises.forEach((promise) => {
+      promise.then(() => {
+        loadedCount++;
+        if (!isCancelled) {
+          setLoadingProgress((loadedCount / imageUrls.length) * 100);
+        }
+      });
+    });
+
+    // Wait for all images to load
+    Promise.all(imagePromises).then(() => {
+      if (!isCancelled) {
+        setImagesLoaded(true);
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [imageUrls]);
+
+  return { imagesLoaded, loadingProgress };
+}
+
 // Grain Overlay Component
 function GrainOverlay() {
   return (
@@ -389,7 +441,7 @@ function ExperienceSection() {
         "Built and maintained detailed project plans and task lists covering ideation, budgeting, styling, props, and logistics.",
         "Led an 8-member team to deliver the award-winning TeTrad Project; managed agenda, timeline, and budget sheets while tracking progress and driving contributions.",
         "Demonstrated strong time-management and conflict-resolution skills.",
-        "Directed visual production for external events: Gấu Uniform Collaboration (2023), “Chơi Chất-Chất Chơi” Rock Show, “Hội Chợ Dân Gian – Nghe Hay Ha” (2024), and multiple yearbook projects.",
+        "Directed visual production for external events: Gấu Uniform Collaboration (2023), 'Chơi Chất-Chất Chơi' Rock Show, 'Hội Chợ Dân Gian – Nghe Hay Ha' (2024), and multiple yearbook projects.",
         "Produced the Yearbook Album for Sugie Band.",
         "Mentoring the next generation, planning event agendas, and scheduling team meetings.",
       ],
@@ -424,7 +476,7 @@ function ExperienceSection() {
       details: [
         "Researched and secured sponsorship opportunities from food-and-beverage businesses.",
         "Drafted and designed comprehensive event proposals.",
-        "Liaised with artists’ assistants and managed detailed performance timelines pre-event and on-event.",
+        "Liaised with artists' assistants and managed detailed performance timelines pre-event and on-event.",
         "Coordinated with the school president to finalize key festival logistics, including artist fees, stage setup, and staffing.",
       ],
     },
@@ -675,25 +727,25 @@ function PersonalDesignSection() {
       id: 1,
       title: "Food Magazine",
       year: "2024",
-      gallery: ["/designs/Food_Magazine/official_1080.png"],
+      gallery: ["/designs/Food_Magazine/official_1080.webp"],
     },
     {
       id: 2,
       title: "LipStick's Brochure",
       year: "2024",
-      gallery: ["/designs/LipStick_Brochure/official_1080.png"],
+      gallery: ["/designs/LipStick_Brochure/official_1080.webp"],
     },
     {
       id: 3,
       title: "MilkTea's Logo",
-      year: "2024",
-      gallery: ["/designs/MilkTea_Logo/official_1080.png"],
+      year: "2025",
+      gallery: ["/designs/MilkTea_Logo/official_1080.jpg"],
     },
     {
       id: 4,
       title: "Pastel Symphony",
       year: "2024",
-      gallery: ["/designs/Pastel_Symphony/official_1080.png"],
+      gallery: ["/designs/Pastel_Symphony/official_1080.webp"],
     },
   ];
 
@@ -756,21 +808,6 @@ function PersonalDesignSection() {
                 exit={{ scale: 0.8, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* <div className="flex justify-between items-center mb-6">
-                  <h3
-                    style={{ fontFamily: "Dream-Avenue" }}
-                    className="text-3xl font-bold text-black"
-                  >
-                    {selectedProject.title}
-                  </h3>
-                  <button
-                    onClick={() => setSelectedProject(null)}
-                    className="text-black hover:opacity-70 transition-opacity"
-                  >
-                    <X size={24} />
-                  </button>
-                </div> */}
-
                 <div className="grid gap-4">
                   {selectedProject.gallery.map((img, index) => (
                     <motion.img
@@ -931,14 +968,85 @@ function ScrollToTop() {
   );
 }
 
-// Main App Component
+// Main App Component with Global Preloading
 export default function App() {
+  // Preload all heavy images across the site
+  const imagesToPreload = [
+    // Personal Design images
+    "/designs/Food_Magazine/official_1080.webp",
+    "/designs/LipStick_Brochure/official_1080.webp",
+    "/designs/MilkTea_Logo/official_1080.jpg",
+    "/designs/Pastel_Symphony/official_1080.webp",
+    // Hero portrait
+    "/designs/IMG_4510.JPG",
+  ];
+
+  const { imagesLoaded, loadingProgress } = useImagePreloader(imagesToPreload);
+
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  // Show loading screen while images are preloading
+  if (!imagesLoaded) {
+    return (
+      <div className="fixed inset-0 bg-[#fffff7] flex items-center justify-center z-50">
+        <GrainOverlay />
+        <div className="text-center z-10">
+          <motion.div
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-8"
+            style={{ fontFamily: "Dream-Avenue" }}
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            Loading Portfolio
+          </motion.div>
+
+          {/* Progress Bar */}
+          <div className="w-64 md:w-80 h-2 bg-black/20 rounded-full overflow-hidden mx-auto mb-4">
+            <motion.div
+              className="h-full bg-black rounded-full"
+              initial={{ width: "0%" }}
+              animate={{ width: `${loadingProgress}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+
+          {/* Loading percentage */}
+          <motion.p
+            className="text-black/70 text-lg"
+            style={{ fontFamily: "Cardo99s" }}
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 1, repeat: Infinity }}
+          >
+            {Math.round(loadingProgress)}%
+          </motion.p>
+
+          {/* Decorative loading dots */}
+          <div className="flex justify-center space-x-2 mt-8">
+            {[0, 1, 2].map((index) => (
+              <motion.div
+                key={index}
+                className="w-3 h-3 bg-black rounded-full"
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                  duration: 1.2,
+                  repeat: Infinity,
+                  delay: index * 0.2,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#fffff7] overflow-hidden relative">

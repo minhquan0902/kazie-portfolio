@@ -687,12 +687,7 @@ function PersonalDesignSection() {
       id: 3,
       title: "MilkTea's Logo",
       year: "2024",
-      gallery: [
-        "/designs/MilkTea_Logo/1.jpg",
-        "/designs/MilkTea_Logo/2.jpg",
-        "/designs/MilkTea_Logo/3.jpg",
-        "/designs/MilkTea_Logo/4.jpg",
-      ],
+      gallery: ["/designs/MilkTea_Logo/official_1080.png"],
     },
     {
       id: 4,

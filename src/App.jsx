@@ -816,13 +816,13 @@ function PersonalDesignSection() {
             </h4> */}
 
             {/* Image Gallery */}
-            <div className="space-y-4 md:space-y-6">
+            <div>
               {selectedProject.gallery.map((img, index) => (
                 <motion.img
                   key={index}
                   src={img}
                   alt={`${selectedProject.title} ${index + 1}`}
-                  className="w-full rounded-lg shadow-xl"
+                  className="w-full"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
@@ -954,6 +954,17 @@ function PhotographySection() {
         "/designs/Graduation/graduation_2.jpg",
       ],
     },
+    {
+      id: 3,
+      title: "TeTrad",
+      year: "2022",
+      gallery: [
+        "designs/TeTrad/TeTrad_1.jpg",
+        "designs/TeTrad/TeTrad_2.jpg",
+        "designs/TeTrad/TeTrad_3.jpg",
+        "designs/TeTrad/TeTrad_4.jpg",
+      ],
+    },
   ];
 
   // Update photos per row based on screen size
@@ -1022,13 +1033,13 @@ function PhotographySection() {
             </h4> */}
 
             {/* Photo Gallery */}
-            <div className="space-y-4 md:space-y-6">
+            <div>
               {selectedPhoto.gallery.map((img, index) => (
                 <motion.img
                   key={index}
                   src={img}
                   alt={`${selectedPhoto.title} ${index + 1}`}
-                  className="w-full rounded-lg shadow-xl"
+                  className="w-full"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
@@ -1242,6 +1253,10 @@ export default function App() {
     "/designs/Studio/studio.jpg",
     "/designs/Graduation/graduation_1.jpg",
     "/designs/Graduation/graduation_2.jpg",
+    "designs/TeTrad/TeTrad_1.jpg",
+    "designs/TeTrad/TeTrad_2.jpg",
+    "designs/TeTrad/TeTrad_3.jpg",
+    "designs/TeTrad/TeTrad_4.jpg",
 
     // Hero portrait
     "/designs/IMG_4510.JPG",

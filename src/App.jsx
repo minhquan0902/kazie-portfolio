@@ -37,6 +37,14 @@ const fontStyles = `
     font-weight: normal;
     font-style: normal;
   }
+
+  @font-face {
+    font-family: 'LeagueSpartan';
+    src: url('/designs/Fonts/LeagueSpartan.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
 `;
 
 const scrollStyles = `
@@ -489,10 +497,10 @@ function ExperienceSection() {
       link: "https://www.facebook.com/NHHPTG",
       details: [
         "Built and maintained detailed project plans and task lists covering ideation, budgeting, styling, props, and logistics.",
-        "Led an 8-member team to deliver the award-winning TeTrad Project; managed agenda, timeline, and budget sheets while tracking progress and driving contributions.",
-        "Demonstrated strong time-management and conflict-resolution skills.",
-        "Directed visual production for external events: Gấu Uniform Collaboration (2023), 'Chơi Chất-Chất Chơi' Rock Show, 'Hội Chợ Dân Gian – Nghe Hay Ha' (2024), and multiple yearbook projects.",
-        "Produced the Yearbook Album for Sugie Band.",
+        "Led a team to deliver the award-winning TeTrad Project, an annual contest for photography idea; managed agenda, timeline, and budget sheets while tracking progress and driving contributions.",
+        "Demonstrated strong time management and conflict resolution skills.",
+        "Created photography ideas for external events: Gấu Uniform (2023), multiple yearbook projects.",
+        "Collaborative photographer for the “Chơi Chất–Chất Chơi” Rock Show and the 2024 “Hội Chợ Dân Gian – Nghe Hay Ha” festival.",
         "Mentoring the next generation, planning event agendas, and scheduling team meetings.",
       ],
     },
@@ -514,8 +522,7 @@ function ExperienceSection() {
       link: "https://www.facebook.com/w.acoustic.nhh",
       details: [
         "Collaborated effectively with cross-department teams.",
-        "Developed and executed a comprehensive social-media strategy for official channels.",
-        "Led production of the Yearbook Album.",
+        "Photographed and edited images of band activities.",
       ],
     },
     {
@@ -524,10 +531,10 @@ function ExperienceSection() {
       description: "External Relations",
       link: "https://www.facebook.com/hcdg.nhh",
       details: [
-        "Researched and secured sponsorship opportunities from food-and-beverage businesses.",
+        "Researched sponsorship opportunities from food-and-beverage businesses; drafted and sent outreach emails to prospective partners.",
         "Drafted and designed comprehensive event proposals.",
-        "Liaised with artists' assistants and managed detailed performance timelines pre-event and on-event.",
-        "Coordinated with the school president to finalize key festival logistics, including artist fees, stage setup, and staffing.",
+        "Liaised with artists’ assistants and managed performance timelines pre-event and on-event.",
+        "Coordinated with the school board to follow artists’ rehearsal timelines and media activities.",
       ],
     },
   ];
@@ -708,14 +715,23 @@ function ProjectCard({ project, onClick }) {
 
 // Professional Communication Section
 function ProfessionalSection() {
-  const designs = [
-    "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1563089145-599997674d42?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1604871000636-074fa5117945?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1618556450994-a6a128ef0d9d?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1620121692029-d088224ddc74?w=400&h=400&fit=crop",
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const projects = [
+    {
+      id: 1,
+      title: 'CoCoon: Client Research Infographic - "Nature-Inspired Beauty"',
+      date: "December 20, 2024",
+      description: `This assignment distills CoCoon's brand situation, market situation, and target audience research into one visual infographic, spotlighting the client's key issue and my strategic recommendations. The outcome: a clear communication roadmap that proves my ability to blend critical analysis, creative insight, and reasoned strategy for the client's communication direction.`,
+      coverImage: "/designs/ProfComm/coocon_1.webp",
+      gallery: ["/designs/ProfComm/coocon_2.webp"], // For expandable view
+    },
+    // Add more projects here in the future
   ];
+
+  const handleProjectClick = (project) => {
+    setSelectedProject(selectedProject?.id === project.id ? null : project);
+  };
 
   return (
     <section id="professional-communication" className="py-20 bg-[#fffff7]">
@@ -730,44 +746,179 @@ function ProfessionalSection() {
           Professional Communication
         </motion.h2>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <GalleryGrid images={designs} title="Design" />
-        </motion.div>
+        <div className="max-w-6xl mx-auto">
+          {projects.map((project, index) => (
+            <React.Fragment key={project.id}>
+              {/* Add top border for first item */}
+              {index === 0 && <div className="border-t-4 border-black" />}
+
+              {/* Horizontal Card */}
+              <motion.div
+                className={`group border-b-4 border-black py-8 md:py-10 cursor-pointer transition-all duration-300 ${
+                  selectedProject?.id === project.id
+                    ? "bg-black text-white"
+                    : "bg-[#fffff7] hover:bg-black hover:text-white"
+                }`}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => handleProjectClick(project)}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 px-4 md:px-8">
+                  {/* First Column: Title and Date */}
+                  <div className="flex flex-col">
+                    <h3
+                      style={{ fontFamily: "LeagueSpartan" }}
+                      className="text-xl md:text-2xl lg:text-3xl font-bold mb-2"
+                    >
+                      {project.title}
+                    </h3>
+                    <p
+                      style={{ fontFamily: "LeagueSpartan" }}
+                      className="text-sm opacity-60 italic tracking-wider"
+                    >
+                      {project.date}
+                    </p>
+                  </div>
+
+                  {/* Second Column: Cover Image */}
+                  <div className="flex items-center justify-center">
+                    <div className="relative w-full max-w-[300px] aspect-square overflow-hidden">
+                      <img
+                        src={project.coverImage}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Third Column: Description */}
+                  <div className="flex flex-col">
+                    <div
+                      style={{ fontFamily: "LeagueSpartan" }}
+                      className="text-sm md:text-base leading-relaxed opacity-85"
+                    >
+                      {project.description.split("\n").map((line, idx) => {
+                        if (line.includes("**|") && line.includes("|**")) {
+                          // Bold header line
+                          return (
+                            <p key={idx} className="font-bold mb-1">
+                              {line
+                                .replace(/\*\*\|/g, "")
+                                .replace(/\|\*\*/g, "")}
+                            </p>
+                          );
+                        } else if (line.includes("*") && line.includes("*")) {
+                          // Italic line
+                          return (
+                            <p key={idx} className="italic mb-3 opacity-75">
+                              {line.replace(/\*/g, "")}
+                            </p>
+                          );
+                        } else if (line.trim() === "") {
+                          // Empty line
+                          return <br key={idx} />;
+                        } else {
+                          // Regular text
+                          return (
+                            <p key={idx} className="mb-2">
+                              {line}
+                            </p>
+                          );
+                        }
+                      })}
+                    </div>
+
+                    {/* Arrow Icon */}
+                    <motion.div
+                      className="flex justify-start mt-4"
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`transition-colors ${
+                          selectedProject?.id === project.id
+                            ? "text-white"
+                            : "text-black group-hover:text-white"
+                        }`}
+                      >
+                        <path
+                          d="M7 17L17 7M17 7H7M17 7V17"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Expanded View */}
+              <AnimatePresence mode="wait">
+                {selectedProject?.id === project.id && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                  >
+                    <motion.div
+                      className="relative bg-white/60 backdrop-blur-sm border-b-4 border-black p-4 md:p-8"
+                      initial={{ y: 30, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 30, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                    >
+                      {/* Close button */}
+                      <motion.button
+                        className="absolute top-2 right-2 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProject(null);
+                        }}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <X size={16} className="md:hidden" />
+                        <X size={20} className="hidden md:block" />
+                      </motion.button>
+
+                      {/* Gallery Images */}
+                      <div className="space-y-4">
+                        {selectedProject.gallery.map((img, imgIndex) => (
+                          <motion.img
+                            key={imgIndex}
+                            src={img}
+                            alt={`${selectedProject.title} ${imgIndex + 1}`}
+                            className="w-full"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{
+                              delay: imgIndex * 0.15,
+                              duration: 0.5,
+                              ease: "easeOut",
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
-
-// Gallery Grid Component
-function GalleryGrid({ images, title }) {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {images.map((image, index) => (
-        <motion.div
-          key={index}
-          className="relative group overflow-hidden rounded-lg aspect-square"
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: index * 0.05 }}
-          whileHover={{ scale: 1.05 }}
-        >
-          <img
-            src={image}
-            alt={`${title} ${index + 1}`}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
 // Personal Design Section
 function PersonalDesignSection() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -1308,6 +1459,10 @@ export default function App() {
     "designs/TeTrad/TeTrad_2.jpg",
     "designs/TeTrad/TeTrad_3.jpg",
     "designs/TeTrad/TeTrad_4.jpg",
+
+    // Professional Communication images
+    "/designs/ProfComm/coocon_1.webp",
+    "/designs/ProfComm/coocon_2.webp",
 
     // Hero portrait
     "/designs/IMG_4510.JPG",

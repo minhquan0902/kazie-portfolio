@@ -19,7 +19,7 @@ import {
   Twitter,
   ExternalLink,
   Camera,
-  Mouse,
+  Palette,
 } from "lucide-react";
 
 // Font Face Declarations
@@ -39,13 +39,61 @@ const fontStyles = `
   }
 `;
 
+const scrollStyles = `
+  @media (max-width: 768px) {
+    section[id] {
+      scroll-margin-top: 80px;
+    }
+  }
+`;
 // Add font styles to document head
 if (typeof document !== "undefined") {
   const styleElement = document.createElement("style");
-  styleElement.innerHTML = fontStyles;
+  styleElement.innerHTML = fontStyles + scrollStyles;
   document.head.appendChild(styleElement);
 }
 
+// Smooth scroll polyfill for iOS Safari
+if (!("scrollBehavior" in document.documentElement.style)) {
+  const smoothScrollTo = (targetY, duration = 500) => {
+    const startY = window.pageYOffset;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+
+    const animation = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function
+      const ease =
+        progress < 0.5
+          ? 2 * progress * progress
+          : -1 + (4 - 2 * progress) * progress;
+
+      window.scrollTo(0, startY + distance * ease);
+
+      if (progress < 1) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
+
+  // Override window.scrollTo for smooth behavior
+  const originalScrollTo = window.scrollTo;
+  window.scrollTo = (options) => {
+    if (
+      options &&
+      typeof options === "object" &&
+      options.behavior === "smooth"
+    ) {
+      smoothScrollTo(options.top || 0);
+    } else {
+      originalScrollTo.apply(window, arguments);
+    }
+  };
+}
 // Custom hook for preloading images
 function useImagePreloader(imageUrls) {
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -306,7 +354,9 @@ function Navigation({ scrollToSection }) {
               <motion.button
                 key={item}
                 onClick={() => {
-                  scrollToSection(item.toLowerCase().replace(" ", "-"));
+                  setTimeout(() => {
+                    scrollToSection(item.toLowerCase().replace(" ", "-"));
+                  }, 150);
                   setIsOpen(false);
                 }}
                 className="block w-full text-left px-4 py-3 text-black hover:bg-black/5"
@@ -843,12 +893,13 @@ function PersonalDesignSection() {
     <section id="personal-design" className="py-20 bg-[#fffff7]">
       <div className="max-w-7xl mx-auto px-4">
         <motion.h2
-          className="text-4xl md:text-5xl font-bold text-center text-black mb-16"
+          className="text-4xl md:text-5xl font-bold text-center text-black mb-16 flex items-center justify-center gap-4"
+          style={{ fontFamily: "Dream-Avenue" }}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          style={{ fontFamily: "Dream-Avenue" }}
         >
+          <Palette className="text-black" />
           Personal Design
         </motion.h2>
 
@@ -1267,7 +1318,28 @@ export default function App() {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      // Use the same approach for all screen sizes to account for fixed navbar
+      const navBar = document.querySelector("nav");
+      const navHeight = navBar ? navBar.offsetHeight : 0;
+
+      // Get current scroll position
+      const currentScrollY =
+        window.pageYOffset || document.documentElement.scrollTop;
+
+      // Get element position relative to document
+      const elementRect = element.getBoundingClientRect();
+      const elementTop = elementRect.top + currentScrollY;
+
+      // Calculate target position with offset for navbar
+      // Add a bit more padding for desktop for better visual spacing
+      const extraPadding = window.innerWidth >= 768 ? 20 : 10;
+      const targetPosition = elementTop - navHeight - extraPadding;
+
+      // Perform the scroll
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth",
+      });
     }
   };
 

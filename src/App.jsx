@@ -716,6 +716,7 @@ function ProjectCard({ project, onClick }) {
 // Professional Communication Section
 function ProfessionalSection() {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const projects = [
     {
@@ -724,13 +725,57 @@ function ProfessionalSection() {
       date: "December 20, 2024",
       description: `This assignment distills CoCoon's brand situation, market situation, and target audience research into one visual infographic, spotlighting the client's key issue and my strategic recommendations. The outcome: a clear communication roadmap that proves my ability to blend critical analysis, creative insight, and reasoned strategy for the client's communication direction.`,
       coverImage: "/designs/ProfComm/coocon_1.webp",
-      gallery: ["/designs/ProfComm/coocon_2.webp"], // For expandable view
+      gallery: ["/designs/ProfComm/coocon_2.webp"],
+      header: "| Client Research Infographic |",
+      titleSmall: "Specialized-field Assignment",
     },
-    // Add more projects here in the future
+    {
+      id: 2,
+      title: "Instagram: Stakeholder Map - “Protect Kids Online” Project",
+      date: "May 4, 2025",
+      description: `This assignment positions me as a member of Instagram’s core communications team. After high-profile data breaches ignited worldwide privacy concerns, especially regarding children's data. Therefore, governments worldwide are debating new regulations for the industry. For a proactive approach, Instagram is planning a company-funded initiative to restore trust. I was asked to research the issue, brainstorm with stakeholders, and plot each on a Power/ Interest matrix, crafting an executive summary of the most influential players to steer communications and manage relationships throughout the project’s rollout.`,
+      coverImage: "/designs/ProfComm/insta_1.webp",
+      gallery: [
+        "/designs/ProfComm/insta_2.webp",
+        "/designs/ProfComm/insta_3.webp",
+      ],
+      header: "| Stakeholder Map |",
+      titleSmall: "Specialized-field Assignment",
+    },
   ];
 
   const handleProjectClick = (project) => {
-    setSelectedProject(selectedProject?.id === project.id ? null : project);
+    if (selectedProject?.id === project.id) {
+      setSelectedProject(null);
+    } else {
+      setSelectedProject(project);
+      setCurrentImageIndex(0); // Reset to first image when opening new project
+    }
+  };
+
+  const nextImage = () => {
+    if (selectedProject && selectedProject.gallery.length > 1) {
+      setCurrentImageIndex((prev) =>
+        prev === selectedProject.gallery.length - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  // flipbook effect
+  const flipToNextImage = () => {
+    if (selectedProject && selectedProject.gallery.length > 1) {
+      setCurrentImageIndex((prev) =>
+        prev === selectedProject.gallery.length - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (selectedProject && selectedProject.gallery.length > 1) {
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? selectedProject.gallery.length - 1 : prev - 1
+      );
+    }
   };
 
   return (
@@ -878,7 +923,7 @@ function ProfessionalSection() {
                     >
                       {/* Close button */}
                       <motion.button
-                        className="absolute top-2 right-2 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
+                        className="absolute top-2 right-2 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-black/80 transition-colors z-20"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedProject(null);
@@ -890,24 +935,99 @@ function ProfessionalSection() {
                         <X size={20} className="hidden md:block" />
                       </motion.button>
 
-                      {/* Gallery Images */}
-                      <div className="space-y-4">
-                        {selectedProject.gallery.map((img, imgIndex) => (
-                          <motion.img
-                            key={imgIndex}
-                            src={img}
-                            alt={`${selectedProject.title} ${imgIndex + 1}`}
-                            className="w-full"
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{
-                              delay: imgIndex * 0.15,
-                              duration: 0.5,
-                              ease: "easeOut",
-                            }}
-                          />
-                        ))}
+                      {/* Project Header and Title */}
+                      <div className="text-center mb-6 pr-8 md:pr-0">
+                        <motion.h4
+                          className="text-2xl md:text-3xl font-bold text-black mb-2"
+                          style={{ fontFamily: "LeagueSpartan" }}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          {selectedProject.header}
+                        </motion.h4>
+                        <motion.p
+                          className="text-lg md:text-xl text-black/70 italic"
+                          style={{ fontFamily: "LeagueSpartan" }}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 0.1 }}
+                        >
+                          {selectedProject.titleSmall}
+                        </motion.p>
                       </div>
+
+                      {/* Gallery Images - Flipbook or Single Image */}
+                      {selectedProject?.gallery.length > 1 ? (
+                        // Flipbook for multiple images
+                        <div className="relative">
+                          <motion.div
+                            className="relative cursor-pointer"
+                            onClick={flipToNextImage}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <motion.img
+                              key={currentImageIndex}
+                              src={selectedProject.gallery[currentImageIndex]}
+                              alt={`${selectedProject.title} ${
+                                currentImageIndex + 1
+                              }`}
+                              className="w-full"
+                              initial={{ opacity: 0, x: 50 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -50 }}
+                              transition={{ duration: 0.3 }}
+                            />
+                            {/* Subtle hint overlay for clickable area
+                            <motion.div
+                              className="absolute inset-0 bg-black/0 hover:bg-black/5 flex items-center justify-center"
+                              initial={{ opacity: 0 }}
+                              whileHover={{ opacity: 1 }}
+                            >
+                              <span className="text-black/70 bg-white/80 px-4 py-2 rounded-full text-sm backdrop-blur-sm">
+                                Click to flip page
+                              </span>
+                            </motion.div> */}
+                          </motion.div>
+
+                          {/* Page indicator */}
+                          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-3 py-1 rounded-full text-sm">
+                            {currentImageIndex + 1} /{" "}
+                            {selectedProject.gallery.length}
+                          </div>
+
+                          {/* Dot indicators */}
+                          <div className="flex justify-center mt-4 space-x-2">
+                            {selectedProject.gallery.map((_, index) => (
+                              <motion.button
+                                key={index}
+                                className={`w-3 h-3 rounded-full transition-colors ${
+                                  index === currentImageIndex
+                                    ? "bg-black"
+                                    : "bg-black/30"
+                                }`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setCurrentImageIndex(index);
+                                }}
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.9 }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        // Single image display - keep as is
+                        <motion.img
+                          src={selectedProject.gallery[0]}
+                          alt={selectedProject.title}
+                          className="w-full"
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                        />
+                      )}
                     </motion.div>
                   </motion.div>
                 )}
@@ -1463,6 +1583,9 @@ export default function App() {
     // Professional Communication images
     "/designs/ProfComm/coocon_1.webp",
     "/designs/ProfComm/coocon_2.webp",
+    "/designs/ProfComm/insta_1.webp",
+    "/designs/ProfComm/insta_2.webp",
+    "/designs/ProfComm/insta_3.webp",
 
     // Hero portrait
     "/designs/IMG_4510.JPG",

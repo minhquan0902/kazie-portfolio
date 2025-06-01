@@ -432,7 +432,7 @@ function HeroSection({ scrollToSection }) {
               <img
                 src="/designs/IMG_4510.webp"
                 alt="Kazie Nguyen"
-                className="w-40 sm:w-48 md:w-56 lg:w-64 h-40 sm:h-48 md:h-56 lg:h-64 rounded-full border-4 border-black shadow-2xl object-cover"
+                className="w-40 sm:w-48 md:w-56 lg:w-64 h-40 sm:h-48 md:h-56 lg:h-80 rounded-full border-4 border-black shadow-2xl object-cover"
               />
             </motion.div>
 
@@ -1400,6 +1400,12 @@ function PhotographySection() {
       year: "2022",
       gallery: ["designs/Stage/stage_1.jpg", "designs/Stage/stage_2.jpg"],
     },
+    {
+      id: 5,
+      title: "Gau Uniform Collaboration",
+      year: "2022",
+      gallery: ["designs/Gau_Uniform/gau_uniform.webp"],
+    },
   ];
 
   // Update photos per row based on screen size
@@ -1686,6 +1692,7 @@ export default function App() {
 
     // Photo images
     "/designs/Studio/studio.jpg",
+    "designs/Gau_Uniform/gau_uniform.webp",
 
     "/designs/Graduation/graduation_1.jpg",
     "/designs/Graduation/graduation_2.jpg",

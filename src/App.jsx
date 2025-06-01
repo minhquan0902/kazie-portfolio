@@ -633,7 +633,7 @@ function ExperienceSection() {
     },
     {
       title: "HCDG Nguyen Huu Huan 2025 - Festival",
-      period: "2023 - 2024",
+      period: "2024 - 2025",
       description: "External Relations",
       link: "https://www.facebook.com/hcdg.nhh",
       details: [

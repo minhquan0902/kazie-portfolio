@@ -407,7 +407,7 @@ function HeroSection({ scrollToSection }) {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <img
-              src="/designs/IMG_4510.JPG"
+              src="/designs/IMG_4510.webp"
               alt="Kazie Nguyen"
               className="w-48 md:w-64 h-48 md:h-90 rounded-full border-4 border-black shadow-2xl object-cover"
             />
@@ -1600,7 +1600,7 @@ export default function App() {
     "/designs/ProfComm/insta_3.webp",
 
     // Hero portrait
-    "/designs/IMG_4510.JPG",
+    "/designs/IMG_4510.webp",
   ];
 
   const { imagesLoaded, loadingProgress } = useImagePreloader(imagesToPreload);

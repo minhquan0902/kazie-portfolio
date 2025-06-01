@@ -1287,6 +1287,13 @@ function PhotographySection() {
         "designs/TeTrad/TeTrad_4.jpg",
       ],
     },
+
+    {
+      id: 4,
+      title: "Stage",
+      year: "2022",
+      gallery: ["designs/Stage/stage_1.jpg", "designs/Stage/stage_2.jpg"],
+    },
   ];
 
   // Update photos per row based on screen size
@@ -1573,12 +1580,17 @@ export default function App() {
 
     // Photo images
     "/designs/Studio/studio.jpg",
+
     "/designs/Graduation/graduation_1.jpg",
     "/designs/Graduation/graduation_2.jpg",
+
     "designs/TeTrad/TeTrad_1.jpg",
     "designs/TeTrad/TeTrad_2.jpg",
     "designs/TeTrad/TeTrad_3.jpg",
     "designs/TeTrad/TeTrad_4.jpg",
+
+    "designs/Stage/stage_1.jpg",
+    "designs/Stage/stage_2.jpg",
 
     // Professional Communication images
     "/designs/ProfComm/coocon_1.webp",

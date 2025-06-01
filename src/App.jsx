@@ -48,9 +48,13 @@ const fontStyles = `
 `;
 
 const scrollStyles = `
-  @media (max-width: 768px) {
+  section[id] {
+    scroll-margin-top: 80px;
+  }
+  
+  @media (max-width: 767px) {
     section[id] {
-      scroll-margin-top: 80px;
+      scroll-margin-top: 70px;
     }
   }
 `;
@@ -198,7 +202,7 @@ function AnimatedSphere() {
 function ScrollIndicator({ onClick }) {
   return (
     <motion.div
-      className="hidden md:flex absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer"
+      className="hidden md:flex absolute bottom-11 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1, duration: 0.8 }}
@@ -353,7 +357,7 @@ function Navigation({ scrollToSection }) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="md:hidden bg-[#fffff7]/95 backdrop-blur-lg"
+            className="md:hidden bg-[#fffff7]/95 backdrop-blur-lg fixed left-0 right-0 top-full max-h-[calc(100vh-64px)] overflow-y-auto"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -362,12 +366,13 @@ function Navigation({ scrollToSection }) {
               <motion.button
                 key={item}
                 onClick={() => {
+                  setIsOpen(false);
+                  // Small delay to allow menu to close before scrolling
                   setTimeout(() => {
                     scrollToSection(item.toLowerCase().replace(" ", "-"));
-                  }, 150);
-                  setIsOpen(false);
+                  }, 100);
                 }}
-                className="block w-full text-left px-4 py-3 text-black hover:bg-black/5"
+                className="block w-full text-left px-6 py-4 text-black hover:bg-black/5 border-b border-black/10"
                 style={{ fontFamily: "Dream-Avenue" }}
                 whileHover={{ x: 10 }}
               >
@@ -386,96 +391,197 @@ function HeroSection({ scrollToSection }) {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleScrollDown = () => {
     scrollToSection("experience");
   };
 
+  const skills = ["Teamwork", "Creativity", "Research", "Critical Thinking"];
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#fffff7] pt-20 md:pt-0">
+    <section
+      className={`relative ${
+        isMobile ? "min-h-auto" : "min-h-screen"
+      } flex items-center justify-center overflow-hidden bg-[#fffff7] pt-20 md:mt-10 md:pt-5 py-8 md:py-16`}
+    >
       {/* Content */}
       <motion.div
         className="relative z-10 w-full max-w-7xl mx-auto px-4"
-        style={{ y, opacity }}
+        style={{ y: isMobile ? 0 : y, opacity: isMobile ? 1 : opacity }}
       >
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-16">
-          {/* Portrait - Left Side */}
-          <motion.div
-            className="flex-shrink-0"
-            initial={{ scale: 0, x: -50 }}
-            animate={{ scale: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <img
-              src="/designs/IMG_4510.webp"
-              alt="Kazie Nguyen"
-              className="w-48 md:w-64 h-48 md:h-90 rounded-full border-4 border-black shadow-2xl object-cover"
-            />
-          </motion.div>
-
-          {/* Text Content - Right Side */}
-          <div className="flex-1">
-            <div className="flex flex-col md:flex-row items-center md:items-stretch gap-8">
-              {/* Title Section */}
-              <motion.div
-                className="text-center md:text-left"
-                initial={{ x: 50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <h1
-                  className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight"
-                  style={{ fontFamily: "Dream-Avenue" }}
-                >
-                  <span className="text-black">Kazie</span>
-                  <br />
-                  <span className="text-black">Nguyen's</span>
-                  <br />
-                  <span className="text-black">Portfolio</span>
-                </h1>
-              </motion.div>
-
-              {/* Divider - Horizontal on mobile, vertical on desktop */}
-              <motion.div
-                className="w-full h-px md:w-px md:h-auto bg-black self-center md:self-stretch"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
+        <div className="flex flex-col gap-8 md:gap-12">
+          {/* Top section with portrait and intro */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 md:gap-12 lg:gap-16">
+            {/* Portrait - Left Side */}
+            <motion.div
+              className="flex-shrink-0"
+              initial={{ scale: 0, x: -50 }}
+              animate={{ scale: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <img
+                src="/designs/IMG_4510.webp"
+                alt="Kazie Nguyen"
+                className="w-40 sm:w-48 md:w-56 lg:w-64 h-40 sm:h-48 md:h-56 lg:h-64 rounded-full border-4 border-black shadow-2xl object-cover"
               />
+            </motion.div>
 
-              {/* Description */}
-              <motion.div
-                className="flex-1 flex items-center justify-center h-full"
-                initial={{ x: 50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-              >
-                <p
-                  className="text-base md:text-xl text-black/80 text-center md:text-left"
-                  style={{ fontFamily: "Cardo99s" }}
+            {/* Text Content - Right Side */}
+            <div className="flex-1 w-full">
+              <div className="flex flex-col md:flex-row items-center md:items-stretch gap-6 md:gap-8">
+                {/* Title Section */}
+                <motion.div
+                  className="text-center md:text-left"
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  My name is Khanh Vy,
-                  <br />
-                  freely call me Kazie.
-                  <br />
-                  <br />
-                  I'm driven by a passion for beauty and an endless curiosity to
-                  discover new ideas. Creativity has always guided my path to
-                  craft engaging content for communication.
-                  <br />
-                  <br />
-                  For me, true creativity is not just about capturing attention
-                  at first glance; it's about embedding meaningful messages that
-                  resonate deeply with audiences.
-                </p>
-              </motion.div>
+                  <h1
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold leading-tight"
+                    style={{ fontFamily: "Dream-Avenue" }}
+                  >
+                    <span className="text-black">Kazie</span>
+                    <br />
+                    <span className="text-black">Nguyen's</span>
+                    <br />
+                    <span className="text-black">Portfolio</span>
+                  </h1>
+                </motion.div>
+
+                {/* Divider - Horizontal on mobile, vertical on desktop */}
+                <motion.div
+                  className="w-full h-px md:w-px md:h-auto bg-black self-center md:self-stretch"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                />
+
+                {/* Description */}
+                <motion.div
+                  className="flex-1 flex items-center justify-center h-full max-w-2xl md:max-w-none"
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <p
+                    className="text-sm sm:text-base md:text-lg lg:text-xl text-black/80 text-center md:text-left"
+                    style={{ fontFamily: "Cardo99s" }}
+                  >
+                    My name is Khanh Vy,
+                    <br />
+                    freely call me Kazie.
+                    <br />
+                    <br />
+                    I'm driven by a passion for beauty and an endless curiosity
+                    to discover new ideas. Creativity has always guided my path
+                    to craft engaging content for communication.
+                    <br />
+                    <br />
+                    For me, true creativity is not just about capturing
+                    attention at first glance; it's about embedding meaningful
+                    messages that resonate deeply with audiences.
+                  </p>
+                </motion.div>
+              </div>
             </div>
           </div>
+
+          {/* Education, Skills, and Software Section */}
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {/* Education */}
+            <div className="text-center sm:text-left col-span-1 sm:col-span-2 lg:col-span-1">
+              <h3
+                className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 text-black"
+                style={{ fontFamily: "Dream-Avenue" }}
+              >
+                Education
+              </h3>
+              <div className="inline-block w-full sm:w-auto">
+                <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-lg border-2 border-black">
+                  <h4
+                    className="text-lg sm:text-xl font-bold text-black mb-2"
+                    style={{ fontFamily: "Dream-Avenue" }}
+                  >
+                    RMIT University
+                  </h4>
+                  <p
+                    className="text-sm sm:text-base text-black/70 mb-1"
+                    style={{ fontFamily: "Cardo99s" }}
+                  >
+                    2024 - Now
+                  </p>
+                  <p
+                    className="text-sm sm:text-base text-black font-semibold"
+                    style={{ fontFamily: "Cardo99s" }}
+                  >
+                    Bachelor of Professional Communication
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Skills */}
+            <div className="text-center sm:text-left col-span-1 sm:col-span-2 lg:col-span-1">
+              <h3
+                className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 text-black"
+                style={{ fontFamily: "Dream-Avenue" }}
+              >
+                Skills
+              </h3>
+              <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-start">
+                {skills.map((skill, index) => (
+                  <motion.span
+                    key={skill}
+                    className="px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 bg-white/60 backdrop-blur-sm border-2 border-black rounded-full text-black font-medium text-sm sm:text-base"
+                    style={{ fontFamily: "Cardo99s" }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    {skill}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
+
+            {/* Software */}
+            <div className="text-center sm:text-left col-span-1 sm:col-span-2 lg:col-span-1">
+              <h3
+                className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 text-black"
+                style={{ fontFamily: "Dream-Avenue" }}
+              >
+                Software
+              </h3>
+              <div className="flex justify-center sm:justify-start">
+                <img
+                  className="w-full max-w-[300px] sm:max-w-[250px] md:max-w-[280px] lg:max-w-[320px]"
+                  src={"/designs/logo.png"}
+                  alt="Logo"
+                />
+              </div>
+            </div>
+          </motion.div>
         </div>
       </motion.div>
 
       {/* Scroll Indicator */}
-      <ScrollIndicator onClick={handleScrollDown} />
+      {!isMobile && <ScrollIndicator onClick={handleScrollDown} />}
     </section>
   );
 }
@@ -483,13 +589,13 @@ function HeroSection({ scrollToSection }) {
 // Experience Section
 function ExperienceSection() {
   const experiences = [
-    {
-      title: "RMIT University",
-      period: "2024-2027",
-      description: "Bachelor of Professional Communication",
-      link: "https://www.rmit.edu.vn/",
-      details: [],
-    },
+    // {
+    //   title: "RMIT University",
+    //   period: "2024-2027",
+    //   description: "Bachelor of Professional Communication",
+    //   link: "https://www.rmit.edu.vn/",
+    //   details: [],
+    // },
     {
       title: "NHH Photography Club",
       period: "2021-2025",
@@ -512,7 +618,7 @@ function ExperienceSection() {
       details: [
         "Photographed every event zone.",
         "Curated and edited images for on-time posts on the official page.",
-        "Directed visitors to exhibition areas and booths.",
+        "Directed visitors to exhibition pavilions.",
       ],
     },
     {
@@ -1278,7 +1384,7 @@ function PhotographySection() {
     },
     {
       id: 3,
-      title: "TeTrad",
+      title: "TeTrad Project",
       year: "2022",
       gallery: [
         "designs/TeTrad/TeTrad_1.jpg",
@@ -1601,6 +1707,9 @@ export default function App() {
 
     // Hero portrait
     "/designs/IMG_4510.webp",
+
+    // Hero Skill Logo
+    "/designs/logo.png",
   ];
 
   const { imagesLoaded, loadingProgress } = useImagePreloader(imagesToPreload);
@@ -1621,15 +1730,21 @@ export default function App() {
       const elementTop = elementRect.top + currentScrollY;
 
       // Calculate target position with offset for navbar
-      // Add a bit more padding for desktop for better visual spacing
-      const extraPadding = window.innerWidth >= 768 ? 20 : 10;
+      // Adjust padding based on screen size
+      const isMobile = window.innerWidth < 768;
+      const extraPadding = isMobile ? 5 : window.innerWidth >= 768 ? 20 : 10;
       const targetPosition = elementTop - navHeight - extraPadding;
 
-      // Perform the scroll
-      window.scrollTo({
-        top: targetPosition,
-        behavior: "smooth",
-      });
+      // Perform the scroll with iOS-friendly behavior
+      try {
+        window.scrollTo({
+          top: targetPosition,
+          behavior: "smooth",
+        });
+      } catch (e) {
+        // Fallback for browsers that don't support smooth scrolling
+        window.scrollTo(0, targetPosition);
+      }
     }
   };
 

@@ -1178,7 +1178,7 @@ function PersonalDesignSection() {
     {
       id: 5,
       title: "NHHPTG Member Profile",
-      year: "2024",
+      year: "2025",
       gallery: ["/designs/Member_Profile/member_profile.jpg"],
     },
   ];

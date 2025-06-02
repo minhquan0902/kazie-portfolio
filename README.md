@@ -9,3 +9,4 @@ Currently, two official plugins are available:
 
 Project Initiate to link up deployment to Vercel
 
+official site domain: https://kazie.me/

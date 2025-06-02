@@ -1175,6 +1175,12 @@ function PersonalDesignSection() {
       year: "2024",
       gallery: ["/designs/Pastel_Symphony/official_1080.webp"],
     },
+    {
+      id: 5,
+      title: "NHHPTG Member Profile",
+      year: "2024",
+      gallery: ["/designs/Member_Profile/member_profile.jpg"],
+    },
   ];
 
   // Update items per row based on screen size
@@ -1689,6 +1695,7 @@ export default function App() {
     "/designs/LipStick_Brochure/official_1080.webp",
     "/designs/MilkTea_Logo/official_1080.jpg",
     "/designs/Pastel_Symphony/official_1080.webp",
+    "/designs/Member_Profile/member_profile.jpg",
 
     // Photo images
     "/designs/Studio/studio.jpg",
